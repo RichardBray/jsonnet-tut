@@ -4,16 +4,15 @@ local dashboard = grafana.dashboard;
 local timeSeries = grafana.panel.timeSeries;
 
 dashboard.new('Node Metrics')
-+ dashboard.withDescription('CPU Usage')
++ dashboard.withDescription('Metrics from the node exporter')
 + dashboard.time.withFrom(value="now-30m")
 + dashboard.withPanels(
-    timeSeries.new('My first graph')
-    + timeSeries.queryOptions.withDatasource('prometheus', 'bebsfl2z94g74c')
+    timeSeries.new('CPU Usage')
     + timeSeries.queryOptions.withTargets([
-          grafana.query.prometheus.new(
-      'bebsfl2z94g74c',
-      'irate(node_cpu_seconds_total{mode!=\"idle\", cpu=\"0\"}[1m])',
-    ),
+      grafana.query.prometheus.new(
+        'bebsfl2z94g74c',
+        'irate(node_cpu_seconds_total{mode!=\"idle\", cpu=\"0\"}[1m])',
+      ),
 
     ])
     + timeSeries.gridPos.withW(24)
