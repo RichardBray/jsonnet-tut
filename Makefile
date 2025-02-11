@@ -1,2 +1,2 @@
 run:
-	jsonnet --jpath vendor main.jsonnet -o output.json
+	jsonnet --jpath vendor --jpath lib main.jsonnet -o output.json
