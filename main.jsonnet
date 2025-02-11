@@ -1,39 +1,32 @@
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 
-/*
-list of people, each with attributes such as name, age, and hobbies.
-includes functions to create person objects.
-calculates statistics like the average age and the count of adults.
-*/
+local dashboard = grafana.dashboard;
+local timeSeries = grafana.panel.timeSeries;
 
-// Define the age at which a person is considered an adult
-local adult_age = 18;
+dashboard.new('Node Metrics')
++ dashboard.withDescription('CPU Usage')
++ dashboard.time.withFrom(value="now-30m")
++ dashboard.withPanels(
+    timeSeries.new('My first graph')
+    + timeSeries.queryOptions.withDatasource('prometheus', 'bebsfl2z94g74c')
+    + timeSeries.queryOptions.withTargets([
+          grafana.query.prometheus.new(
+      'bebsfl2z94g74c',
+      'irate(node_cpu_seconds_total{mode!=\"idle\", cpu=\"0\"}[1m])',
+    ),
 
-// Function to create a person object with name, age, hobbies, and additional properties
-local createPerson(name, age, hobbies) = {
-  name: name,
-  age: age,
-  hobbies: hobbies,
-  isAdult: age >= adult_age,
-  introduction: "Hi, I'm " + name + " and I'm " + age + " years old.",
-};
+    ])
+    + timeSeries.gridPos.withW(24)
+    + timeSeries.gridPos.withH(8),
+  )
 
-// Function to calculate the average age of a list of people
-local averageAge(people) =
-  local ages = [p.age for p in people];
-  std.sum(ages) / std.length(ages);
 
-// Main code
-{
-  people: [
-    createPerson("Alice", 25, ["reading", "hiking"]),
-    createPerson("Bob", 17, ["gaming", "swimming"]),
-    createPerson("Charlie", 30, ["cooking", "traveling"]),
-  ],
-  stats: {
-    totalPeople: std.length($.people),
-    averageAge: averageAge($.people),
-    adultCount: std.length([p for p in $.people if p.isAdult]),
-    adultAge: adult_age,
-    veryOldAdult: self.adultAge + 100,
-  },
+
+/**
+grafana.dashboard.new('My Dashboard') {
+  description: 'This is a dashboard',
+  panels: [
+    grafana.panel.timeSeries.new('My first graph')
+  ]
 }
+ */
