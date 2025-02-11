@@ -32,8 +32,10 @@
       }
    ],
    "stats": {
+      "adultAge": 18,
       "adultCount": 2,
       "averageAge": 24,
+      "old": 118,
       "totalPeople": 3
    }
 }

@@ -33,5 +33,7 @@ local averageAge(people) =
     totalPeople: std.length($.people),
     averageAge: averageAge($.people),
     adultCount: std.length([p for p in $.people if p.isAdult]),
+    adultAge: adult_age,
+    veryOldAdult: self.adultAge + 100,
   },
 }
