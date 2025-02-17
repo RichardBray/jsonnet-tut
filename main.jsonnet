@@ -1,12 +1,24 @@
 local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
-local panels = import 'lib/panels.libsonnet';
+local grizzly = import 'grizzly/grizzly.libsonnet';
 
-local dashboard = grafana.dashboard;
+local dashboards = import 'lib/dashboards.libsonnet';
 
-dashboard.new('Node Metrics')
-+ dashboard.withDescription('Metrics from the node exporter')
-+ dashboard.time.withFrom(value = "now-30m")
-+ dashboard.withPanels([
-    panels.cpuUsagePanel,
-    panels.memoryUsagePanel
-  ])
+local myAlert = {
+  alert: 'HighCPUUsage',
+  expr: 'cpu_usage_percent > 90',
+  'for': '5m',
+  labels: {
+    severity: 'warning'
+  },
+  annotations: {
+    summary: 'High CPU usage detected',
+    description: 'CPU usage is above 90% for 5 minutes'
+  }
+};
+
+{
+  dashboards: [grizzly.dashboard.new(
+    dashboards.nodeMetrics.uid,
+    dashboards.nodeMetrics.dashboard
+  )]
+}

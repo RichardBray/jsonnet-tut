@@ -36,5 +36,16 @@ local cpuQuery(cpuMode) =
       ])
     + timeSeries.gridPos.withW(24)
     + timeSeries.gridPos.withH(8)
-    + timeSeries.standardOptions.withUnit('bytes')
+    + timeSeries.standardOptions.withUnit('bytes'),
+
+  diskUsagePanel: timeSeries.new('Disk Usage')
+    + timeSeries.queryOptions.withTargets([
+        prometheus.new(
+          prometheusDataSourceId,
+          '100 - ((node_filesystem_avail_bytes{device!~"rootfs"} * 100) / node_filesystem_size_bytes{device!~"rootfs"})'
+        ) + prometheus.withLegendFormat('{{mountpoint}}'),
+      ])
+    + timeSeries.gridPos.withW(24)
+    + timeSeries.gridPos.withH(8)
+    + timeSeries.standardOptions.withUnit('percentage')
 }

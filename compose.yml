@@ -1,5 +1,14 @@
 services:
   grizzly:
     image: grafana/grizzly:latest
+    environment:
+      - GRAFANA_URL=http://localhost:5000/
+      - GRAFANA_TOKEN=${GRAFANA_TOKEN}
     volumes:
       - ./:/src
+    network_mode: "host"
+    # depends_on:
+    #   - grafana
+    # networks:
+    #   - grafana-network
+    command: watch /src /src/main.jsonnet
