@@ -7,8 +7,4 @@ services:
     volumes:
       - ./:/src
     network_mode: "host"
-    # depends_on:
-    #   - grafana
-    # networks:
-    #   - grafana-network
     command: watch /src /src/main.jsonnet
